@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <link rel="icon" href="https://www.mindef.gov.sg/Frontend-Assembly/MINDEF_DIS/assets/images/identity/logo/logo-dis-crest01.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-top: 7%;
+            text-align: center;
+            font-size: 4rem;
+        }
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+        }
+        h3 {
+            margin-left: 15px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            justify-content: space-between;
+        }
+        form {
+            display: flex;
+            align-items: center;
+        }
+        label {
+            margin: 5px 10px 5px 10px;
+            padding: 5px;
+        }
+        input {
+            padding: 5px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        button {
+            padding: 5px;
+            background-color: #007bff;
+            width: 100px;
+            height: 42px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        p {
+            margin: 10px;
+        }
+        select {
+            padding: 5px;
+            margin-left: 17px;
+            border-radius: 5px;
+        }
+        .password-details {
+            margin-top: 10px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .strong-password { color: green; }
+        .moderate-password { color: #F6BE00; }
+        .weak-password { color: red; }
+        .logout {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 20px;
+        }
+        .remove-form {
+            margin-left: auto;
+            margin-right: 10px;
+        }
+        .remove-btn {
+            background-color: red;
+        }
+        .form-container,
+        .download-container {
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .search-form {
+            display: flex;
+            justify-content: left;
+            margin-top: 10px;
+        }
+        .generate_password {
+            font-size: 15px;
+            padding: 7px;
+        }
+        .download-container a {
+            text-decoration: none;
+            color: white;
+        }
+        .warning {
+            color: red;
+        }
+        .error {
+            background-color: rgb(243, 151, 151);
+            text-align: center;
+            padding: 7px;
+            margin: 0 auto;
+            width: 300px;
+        }
+        .change_form {
+            justify-content: left;
+            margin-top: 10px;
+        }
+        .password {
+            margin: 10px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            width: 200px;
+            min-height: 18px;
+        }
+        .actions {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navigation.html' %}
+    <h1>Welcome, {{ username }}</h1>
+
+    <h2>Add New Password</h2>
+    <div class="form-container">
+        <form method="POST">
+            <input type="hidden" name="add_password">
+            <label for="service_name">Service Name:</label>
+            <input type="text" id="service_name" name="service_name" required>
+            <label for="service_username">Username:</label>
+            <input type="text" id="service_username" name="service_username" required>
+            <label for="service_password">Password:</label>
+            <input type="password" id="service_password" name="service_password" required>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <h2>Generate a Secure Password</h2>
+    <div class="form-container">
+        <p class="password">
+            {% if generated_password %}
+                {{ generated_password }}
+            {% endif %}
+        </p>
+        <form method="POST" class="generate_form">
+            <button type="submit" name="generate_password" value="true" class="generate_password">Generate</button>
+        </form>
+    </div>
+
+    <h2>Stored Passwords</h2>
+    <div class="container">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            {% if category == "change_error" %}
+                <p class="error">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <form method="POST" class="search-form">
+        <label for="search_password">Search:</label>
+        <input type="text" id="search_password" name="search_password">
+        <button type="submit">Search</button>
+    </form>
+    
+    {% if passwords %}
+        {% set ns = namespace(found=false) %}
+        <ul>
+            {% for service, password in passwords %}
+                {% if not searched_password or service == searched_password %}
+                    <li>
+                        <span>{{ service }}</span>
+                        <div class="actions">
+                            <form method="POST" class="remove-form">
+                                <input type="hidden" name="remove_service" value="{{ service }}">
+                                <button type="submit" class="remove-btn">Remove</button>
+                            </form>
+                            <form method="POST">
+                                <input type="hidden" name="toggle_view_service" value="{{ service }}">
+                                <button type="submit">
+                                    {% if service == service_to_view %}
+                                        Hide
+                                    {% else %}
+                                        View
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                    {% if service == service_to_view %}
+                        <div class="password-details">
+                            <h3>Details for {{ service_to_view }}</h3>
+                            <p><strong>Service:</strong> {{ service_to_view }}</p>
+                            <p><strong>Username:</strong> {{ service_username_to_view }}</p>
+                            <p><strong>Password:</strong> {{ password_to_view }}</p>
+                            <p><strong>Password Strength:</strong> 
+                                <span class="{% if password_strength_warning == 'Strong' %}strong-password{% elif password_strength_warning == 'Moderate' %}moderate-password{% elif password_strength_warning == 'Weak' %}weak-password{% endif %}">
+                                    {{ password_strength_warning }}
+                                </span>
+                            </p>
+                            {% if pwned_count > 0 %}
+                                <p class="warning">
+                                    <strong>WARNING:</strong> {{ pwned_count }} accounts with this password have been compromised on the internet.
+                                </p>
+                            {% endif %}
+                
+                            <!-- Dropdown for changing details -->
+                            <label for="change_dropdown">Change:</label>
+                            <select id="change_dropdown" name="change_dropdown">
+                                <option value="change_service_name">Service</option>
+                                <option value="change_service_username">Username</option>
+                                <option value="change_service_password">Password</option>
+                            </select>
+                            
+                            <!-- Input based on dropdown selection -->
+                            <form method="POST" class="change_form">
+                                <label for="change_details">Change To:</label>
+                                <input type="text" id="change_service_name" name="change_service_name" required>
+                                <button type="submit">Submit</button>    
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% if searched_password %}{% set ns.found = true %}{% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% if searched_password and not ns.found %}
+            <p>Service not found.</p>
+        {% endif %}
+    {% else %}
+        <p>No passwords stored yet.</p>
+    {% endif %}
+    
+    <div class="download-container">
+        <p>Download your passwords as a JSON file:</p>
+        <a href="{{ url_for('download', filename=username + '_passwords.json') }}" class="download-btn" download>
+            <button>Download</button>
+        </a>
+    </div>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            const changeSelectEl = document.getElementById("change_dropdown");
+            const changeInputEl = document.getElementById("change_service_name");
+            if (changeSelectEl && changeInputEl) {
+                changeSelectEl.addEventListener("change", function() {
+                    const selectedValue = this.value; // selectedValue will be value of selected option
+                    changeInputEl.id = selectedValue;
+                    changeInputEl.name = selectedValue;
+                    console.log("New ID:", changeInputEl.id);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

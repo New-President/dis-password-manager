@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navigation {
+            background-color: #333;
+            opacity: 0.8;
+            color: white;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            right: 0;
+        }
+        .navigation:hover {
+            opacity: 1;
+        }
+        .navigation ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: right;
+        }
+        .navigation li {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .navigation a:hover {
+            color: #007bff;
+        }
+        .navigation a {
+            color: white;
+            text-decoration: none;
+        }
+        .navigation .logout {
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navigation">
+        <ul>
+            <li><a href="dashboard">Dashboard</a></li>
+            <li><a href="upload">Upload</a></li>
+            <li><a href="profile">Profile</a></li>
+            <li><a href="logout"><button>Logout</button></a></li>
+        </ul>
+    </nav>
+</body>
+</html>

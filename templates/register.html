@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register</title>
+    <link rel="icon" href="https://www.mindef.gov.sg/Frontend-Assembly/MINDEF_DIS/assets/images/identity/logo/logo-dis-crest01.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 10%;
+            margin-bottom: 40px;
+            font-size: 3rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 5px;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 265px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: medium;
+        }
+        a {
+            display: block;
+            width: 200px;
+            margin: 50px auto;
+            padding: 10px;
+            text-align: center;
+        }
+        div {
+            text-align:center;
+        }
+        .requirements {
+            width: 300px;
+            text-align: left;
+        }
+        h7 {
+            margin-left: 14px;
+            font-weight: bold;
+        }
+        h8 {
+            margin-left: 18px;
+        }
+        ul {
+            margin-top:10px;
+        }
+        .error {
+            background-color: rgb(243, 151, 151);
+            text-align: center;
+            padding: 7px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 300px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="POST">
+        <label>Username: <input type="text" name="username" required></label><br>
+        <label>Password: <input type="password" name="password" required></label>
+        {% for category, message in get_flashed_messages(with_categories=true) %}  <!-- For each category, get each flashed message organized by category-->
+            {% if category == "invalid_register" %} <!-- Only get flashed messages with the invalid_register category-->
+                </br>
+                <div class="error">{{ message }}</div>
+                </br>
+            {% endif %}
+        {% endfor %}
+        <div class="requirements">
+            <p></p>
+            <h7>Username must be:</h7>
+            <ul>
+                <li>Alphanumeric</li>
+                <li>At most 20 characters</li>
+            </ul>
+            <p></p>
+            <h7>Password must be:</h7>
+            <ul>
+                <li>Minimum 8 characters</li>
+                <li>1 uppercase letter</li>
+                <li>1 lowercase letter</li>
+                <li>1 number</li>
+                <li>1 special character</li>
+            </ul>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <a href="/login">Already have an account? Login here.</a>
+</body>
+</html>

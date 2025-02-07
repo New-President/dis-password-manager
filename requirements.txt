@@ -1,0 +1,4 @@
+bcrypt
+cryptography
+flask
+requests

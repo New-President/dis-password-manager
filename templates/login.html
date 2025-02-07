@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="icon" href="https://www.mindef.gov.sg/Frontend-Assembly/MINDEF_DIS/assets/images/identity/logo/logo-dis-crest01.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 10%;
+            margin-bottom: 40px;
+            font-size: 3rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 5px;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 265px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: medium;
+        }
+        a {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 10px;
+            text-align: center;
+        }
+        div{
+            text-align: center;
+        }
+        .error {
+            background-color: rgb(243, 151, 151);
+            text-align: center;
+            padding: 7px;
+            margin: 10px auto;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="POST">
+        <label>Username: <input type="text" name="username" required></label><br>
+        <label>Password: <input type="password" name="password" required></label><br>
+        <button type="submit">Login</button>
+        <br />
+        {% for category, message in get_flashed_messages(with_categories=true) %}  <!-- For each category, get each flashed message organized by category-->
+            {% if category == "invalid_login" %} <!-- Only get flashed messages with the invalid_login category-->
+                <div class="error">{{ message }}</div> 
+            {% endif %}
+        {% endfor %}
+    </form>
+
+    <a href="/register">Don't have an account? Register here.</a>
+</body>
+</html>

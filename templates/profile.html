@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Profile Details</title>
+    <link rel="icon" href="https://www.mindef.gov.sg/Frontend-Assembly/MINDEF_DIS/assets/images/identity/logo/logo-dis-crest01.png">
+    <style>
+            h1 {
+                margin-top: 7%;
+                text-align: center;
+                font-size: 2.5rem;
+            }
+            form {
+                display: flex;
+                align-items: center;
+                border: 4px dotted #555;
+                max-width: 400px;
+                width: 90%;
+                margin: 0 auto;
+                height: 300px;
+                flex-direction: column;
+                justify-content: center;
+                border-radius: 10px;
+                gap: 10px;
+                padding: 10px;
+            }
+            button {
+                padding: 5px;
+                background-color: #007bff;
+                width: 100px;
+                height: 42px; 
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            input {
+                padding: 5px;
+                border-radius: 5px;
+            }
+            .error {
+                background-color: rgb(243, 151, 151);
+                text-align: center;
+                padding: 7px;
+                margin: 10px auto;
+                width: 300px;
+            }
+            .success {
+                background-color: rgb(131, 245, 86);
+                text-align: center;
+                padding: 7px;
+                margin: 10px auto;
+                width: 300px;
+            }
+            .form-header {
+                font-size: 1.2rem;
+                margin-bottom: 5px;
+            }
+    </style>
+</head>
+<body>
+    {% include 'navigation.html' %}
+    <h1>Profile Details</h1>
+    <form method="POST">
+        <label class="form-header">Username: {{ username }}</label>
+        <label>Current Password:</label><input type="password" name="current_password" required>
+        <label>New Password:</label><input type="password" name="new_password" required>
+        <label>Confirm New Password:</label><input type="password" name="confirm_password" required>
+        <button type="submit">Confirm</button>
+    </form>
+    {% for category, message in get_flashed_messages(with_categories=true) %}  <!-- For each category, get each flashed message organized by category-->
+        {% if category == "invalid_profile" %} <!-- Only get flashed messages with the invalid_register category-->
+            <br><br><br>
+            <div class="error">{{ message }}</div>
+        {% endif %}
+        {% if category == "success_profile" %} <!-- Only get flashed messages with the invalid_register category-->
+            <br><br><br>
+            <div class="success">{{ message }}</div>
+        {% endif %}
+        {% if category == "change_password" %} <!-- Only get flashed messages with the invalid_register category-->
+            <br><br><br>
+            <div class="error">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>

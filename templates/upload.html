@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Upload</title>
+        <link rel="icon" href="https://www.mindef.gov.sg/Frontend-Assembly/MINDEF_DIS/assets/images/identity/logo/logo-dis-crest01.png">
+        <style>
+            h1 {
+                margin-top: 7%;
+                text-align: center;
+                font-size: 3rem;
+            }
+            form {
+                display: flex;
+                align-items: center;
+                border: 4px dotted #555;
+                max-width: 400px;
+                width: 90%;
+                margin: 0 auto;
+                height: 300px;
+                flex-direction: column;
+                justify-content: center;
+                border-radius: 10px;
+                gap: 10px;
+            }
+            button {
+                padding: 5px;
+                background-color: #007bff;
+                width: 100px;
+                height: 42px; 
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .container{
+                display: flex;
+                flex-direction: column;
+                margin-top: 20px;
+                align-items: center;
+            }
+            .error {
+                background-color: rgb(243, 151, 151);
+                text-align: center;
+                padding: 7px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                width: 300px;
+            }
+            .upload-icon {
+                width: 40%;
+                opacity: 0.6;
+                cursor: pointer;
+                max-width: 300px;
+                padding: 10px;
+                cursor: pointer;
+                transition: 0.5s;
+            }
+            .upload-icon:hover {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            .upload-btn {
+                margin-bottom: -40px;
+                margin-top: 10px;
+            }
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const fileInput = document.querySelector("input[type=file]");
+                const filename = document.querySelector(".filename");
+                const uploadIcon = document.querySelector(".upload-icon");
+                fileInput.addEventListener("change", () => {
+                    filename.textContent = fileInput.files[0].name;
+                });
+                uploadIcon.addEventListener("click", () => {
+                    fileInput.click();
+                });
+            });
+            function dragOverHandler(event) {
+                event.preventDefault();
+            }
+            function dropHandler(event) {
+                event.preventDefault();
+                const fileInput = document.querySelector("input[type=file]");
+                const filename = document.querySelector(".filename");
+                fileInput.files = event.dataTransfer.files;
+                filename.textContent = fileInput.files[0].name;
+            }
+        </script>
+    </head>
+    <body>
+        {% include 'navigation.html' %}
+        <h1>Upload password file</h1>
+        <form method="POST" enctype="multipart/form-data" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+            <input type="hidden" name="load_password">
+            <input type="file" name="file" accept=".json" style="display: none;">
+            <img src="https://img.icons8.com/ios/500/000000/upload.png" class="upload-icon">
+            <p class="filename">Click icon or drag and drop to upload!</p>
+            <button type="submit" class="upload-btn">Submit</button>
+        </form>
+
+        <div class="container">
+            {% for category, message in get_flashed_messages(with_categories=true) %}  <!-- For each category, get each flashed message organized by category-->
+            {% if category == "invalid_file" %} <!-- Only get flashed messages with the invalid_file category-->
+                <p class="error">{{ message }}</p> 
+            {% endif %}
+            {% endfor %}
+        </div>
+    </body>
+</html>
