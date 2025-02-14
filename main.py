@@ -190,7 +190,7 @@ def login():
             if isinstance(user.change_password_time, str):
                 if datetime.now() - datetime.fromisoformat(
                     user.change_password_time
-                ) > timedelta(seconds=120):
+                ) > timedelta(weeks=4):
                     flash(
                         "Your password has expired. Please change it.",
                         "change_password",
@@ -199,7 +199,7 @@ def login():
                     return redirect(url_for("profile"))
 
             else:
-                if datetime.now() - user.change_password_time > timedelta(seconds=120):
+                if datetime.now() - user.change_password_time > timedelta(weeks=4):
                     flash(
                         "Your password has expired. Please change it.",
                         "change_password",
